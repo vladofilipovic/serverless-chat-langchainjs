@@ -50,7 +50,8 @@ export async function postDocuments(request: HttpRequest, context: InvocationCon
       // If no environment variables are set, it means we are running locally
       context.log('No Azure OpenAI endpoint set, using Ollama models and local DB');
       const embeddings = new OllamaEmbeddings({ model: ollamaEmbeddingsModel });
-      const store = await FaissStore.fromDocuments(documents, embeddings, {});
+      const store = await FaissStore.load(faissStoreFolder, embeddings);
+      await store.addDocuments(documents);
       await store.save(faissStoreFolder);
     }
 
